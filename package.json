@@ -1,0 +1,24 @@
+{
+  "name": "unibiz_server",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "compile": "tsc",
+    "start": "yarn compile && node ./dist/index.js"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.15",
+    "@types/node": "^18.11.18",
+    "prisma": "^4.8.0",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.3.0",
+    "@prisma/client": "^4.8.0",
+    "express": "^4.18.2",
+    "graphql": "^16.6.0",
+    "nexus": "^1.3.0"
+  }
+}
