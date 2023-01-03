@@ -7,14 +7,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model account {
+model user {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
-  email    String
-  username String
+  email    String @unique
+  password String
+  token String?
+  firstName String?
+  lastName String?
 }
 
-model event {
+model experience {
   id      String @id @default(auto()) @map("_id") @db.ObjectId
   astroid String
   name    String
+}
+
+model society {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+}
+
+model union {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
 }

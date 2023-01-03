@@ -2,20 +2,16 @@
 ### Do not make changes to this file directly
 
 
-type Account implements Node {
-  email: String
-
-  """Unique identifier for the resource"""
-  id: ID
-  username: String
-}
-
-type Event implements Node {
+type Experience implements Node {
   astroid: String
 
   """Unique identifier for the resource"""
   id: ID
   name: String
+}
+
+type Mutation {
+  createUser(email: String, firstName: String, lastName: String, password: String, token: String): User
 }
 
 interface Node {
@@ -24,13 +20,32 @@ interface Node {
 }
 
 type Query {
-  account(name: String, status: StatusEnum): [Account]
-  accountsById(ids: [Int]): [Account]
-  event: [Event]
+  Experience: [Experience]
+  Society: [Society]
+  Union: [Union]
+  User: [User]
   hello: String
 }
 
-enum StatusEnum {
-  ACTIVE
-  DISABLED
+type Society implements Node {
+  """Unique identifier for the resource"""
+  id: ID
+  name: String
+}
+
+type Union implements Node {
+  """Unique identifier for the resource"""
+  id: ID
+  name: String
+}
+
+type User implements Node {
+  email: String
+  firstName: String
+
+  """Unique identifier for the resource"""
+  id: ID
+  lastName: String
+  password: String
+  token: String
 }

@@ -1,12 +1,18 @@
 {
   "compilerOptions": {
-    "rootDirs": ["src"],
+    "rootDirs": ["src", "src/schema"],
     "outDir": "dist",
+    "baseUrl": ".",
     "lib": ["es2020"],
     "target": "es2020",
     "module": "esnext",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "types": ["node"]
+    "types": ["node"],
+    "declaration": true,
+    // Ensure that .d.ts files are created by tsc, but not .js files
+    "emitDeclarationOnly": true,
+    // Ensure that Babel can safely transpile files in the TypeScript project
+    "isolatedModules": true,
   }
 }
