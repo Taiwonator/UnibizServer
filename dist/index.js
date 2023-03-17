@@ -11,6 +11,11 @@ const schema = makeSchema({
   outputs: {
     schema: `${__dirname}/generated/schema.graphql`,
     typegen: `${__dirname}/generated/types.ts`
+  },
+  features: {
+    abstractTypeStrategies: {
+      resolveType: false
+    }
   }
 });
 const server = new ApolloServer({

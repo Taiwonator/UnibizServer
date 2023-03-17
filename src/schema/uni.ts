@@ -5,19 +5,17 @@ import { Node } from './helpers/index.js'
 
 const prisma = new PrismaClient()
 
-
-export const Experience = objectType({
-  name: 'Experience',
+export const Uni = objectType({
+  name: 'Uni',
   definition(t) {
     t.implements(Node)
     t.string('name')
-    t.string('astroid')
   }
 })
 
-export const ExperienceQueryDef = (t: ObjectDefinitionBlock<"Query">) => {
-  t.list.field('Experience', {
-      type: Experience,
-      resolve: () => prisma.experience.findMany()
+export const UniQueryDef = (t: ObjectDefinitionBlock<"Query">) => {
+  t.list.field('Uni', {
+      type: Uni,
+      resolve: () => prisma.uni.findMany()
     })
 }

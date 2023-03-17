@@ -2,16 +2,21 @@
 ### Do not make changes to this file directly
 
 
-type Experience implements Node {
-  astroid: String
+type AuthenticatedUserResponse implements Token {
+  jwt: String
+}
 
+type Event implements Node {
   """Unique identifier for the resource"""
   id: ID
   name: String
+  society: Society
+  type: String
 }
 
 type Mutation {
-  createUser(email: String, firstName: String, lastName: String, password: String, token: String): User
+  createUser(email: String, name: String, password: String, type: String): AuthenticatedUserResponse
+  loginUser(email: String, password: String): AuthenticatedUserResponse
 }
 
 interface Node {
@@ -20,14 +25,31 @@ interface Node {
 }
 
 type Query {
-  Experience: [Experience]
+  Event: [Event]
   Society: [Society]
+  Uni: [Uni]
   Union: [Union]
   User: [User]
   hello: String
 }
 
 type Society implements Node {
+  events: [Event]
+
+  """Unique identifier for the resource"""
+  id: ID
+  name: String
+  union: [Union]
+  unionRequests: [Union]
+  userRequests: [User]
+  users: [User]
+}
+
+interface Token {
+  jwt: String
+}
+
+type Uni implements Node {
   """Unique identifier for the resource"""
   id: ID
   name: String
@@ -37,15 +59,23 @@ type Union implements Node {
   """Unique identifier for the resource"""
   id: ID
   name: String
+  societies: [Society]
+  societyRequests: [Society]
+  uni: Uni
+  userRequests: [User]
+  users: [User]
 }
 
 type User implements Node {
   email: String
-  firstName: String
 
   """Unique identifier for the resource"""
   id: ID
-  lastName: String
+  name: String
   password: String
-  token: String
+  societies: [Society]
+  societyRequests: [Society]
+  type: [String]
+  unionRequests: [Union]
+  unions: [Union]
 }

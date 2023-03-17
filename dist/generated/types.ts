@@ -28,14 +28,21 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
-  Experience: { // root type
-    astroid?: string | null; // String
+  AuthenticatedUserResponse: { // root type
+    jwt?: string | null; // String
+  }
+  Event: { // root type
     id?: string | null; // ID
     name?: string | null; // String
+    type?: string | null; // String
   }
   Mutation: {};
   Query: {};
   Society: { // root type
+    id?: string | null; // ID
+    name?: string | null; // String
+  }
+  Uni: { // root type
     id?: string | null; // ID
     name?: string | null; // String
   }
@@ -45,16 +52,16 @@ export interface NexusGenObjects {
   }
   User: { // root type
     email?: string | null; // String
-    firstName?: string | null; // String
     id?: string | null; // ID
-    lastName?: string | null; // String
+    name?: string | null; // String
     password?: string | null; // String
-    token?: string | null; // String
+    type?: Array<string | null> | null; // [String]
   }
 }
 
 export interface NexusGenInterfaces {
-  Node: NexusGenRootTypes['Experience'] | NexusGenRootTypes['Society'] | NexusGenRootTypes['Union'] | NexusGenRootTypes['User'];
+  Node: NexusGenRootTypes['Event'] | NexusGenRootTypes['Society'] | NexusGenRootTypes['Uni'] | NexusGenRootTypes['Union'] | NexusGenRootTypes['User'];
+  Token: NexusGenRootTypes['AuthenticatedUserResponse'];
 }
 
 export interface NexusGenUnions {
@@ -65,76 +72,128 @@ export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
-  Experience: { // field return type
-    astroid: string | null; // String
+  AuthenticatedUserResponse: { // field return type
+    jwt: string | null; // String
+  }
+  Event: { // field return type
     id: string | null; // ID
     name: string | null; // String
+    society: NexusGenRootTypes['Society'] | null; // Society
+    type: string | null; // String
   }
   Mutation: { // field return type
-    createUser: NexusGenRootTypes['User'] | null; // User
+    createUser: NexusGenRootTypes['AuthenticatedUserResponse'] | null; // AuthenticatedUserResponse
+    loginUser: NexusGenRootTypes['AuthenticatedUserResponse'] | null; // AuthenticatedUserResponse
   }
   Query: { // field return type
-    Experience: Array<NexusGenRootTypes['Experience'] | null> | null; // [Experience]
+    Event: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     Society: Array<NexusGenRootTypes['Society'] | null> | null; // [Society]
+    Uni: Array<NexusGenRootTypes['Uni'] | null> | null; // [Uni]
     Union: Array<NexusGenRootTypes['Union'] | null> | null; // [Union]
     User: Array<NexusGenRootTypes['User'] | null> | null; // [User]
     hello: string | null; // String
   }
   Society: { // field return type
+    events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
+    id: string | null; // ID
+    name: string | null; // String
+    union: Array<NexusGenRootTypes['Union'] | null> | null; // [Union]
+    unionRequests: Array<NexusGenRootTypes['Union'] | null> | null; // [Union]
+    userRequests: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+    users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+  }
+  Uni: { // field return type
     id: string | null; // ID
     name: string | null; // String
   }
   Union: { // field return type
     id: string | null; // ID
     name: string | null; // String
+    societies: Array<NexusGenRootTypes['Society'] | null> | null; // [Society]
+    societyRequests: Array<NexusGenRootTypes['Society'] | null> | null; // [Society]
+    uni: NexusGenRootTypes['Uni'] | null; // Uni
+    userRequests: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+    users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
   }
   User: { // field return type
     email: string | null; // String
-    firstName: string | null; // String
     id: string | null; // ID
-    lastName: string | null; // String
+    name: string | null; // String
     password: string | null; // String
-    token: string | null; // String
+    societies: Array<NexusGenRootTypes['Society'] | null> | null; // [Society]
+    societyRequests: Array<NexusGenRootTypes['Society'] | null> | null; // [Society]
+    type: Array<string | null> | null; // [String]
+    unionRequests: Array<NexusGenRootTypes['Union'] | null> | null; // [Union]
+    unions: Array<NexusGenRootTypes['Union'] | null> | null; // [Union]
   }
   Node: { // field return type
     id: string | null; // ID
   }
+  Token: { // field return type
+    jwt: string | null; // String
+  }
 }
 
 export interface NexusGenFieldTypeNames {
-  Experience: { // field return type name
-    astroid: 'String'
+  AuthenticatedUserResponse: { // field return type name
+    jwt: 'String'
+  }
+  Event: { // field return type name
     id: 'ID'
     name: 'String'
+    society: 'Society'
+    type: 'String'
   }
   Mutation: { // field return type name
-    createUser: 'User'
+    createUser: 'AuthenticatedUserResponse'
+    loginUser: 'AuthenticatedUserResponse'
   }
   Query: { // field return type name
-    Experience: 'Experience'
+    Event: 'Event'
     Society: 'Society'
+    Uni: 'Uni'
     Union: 'Union'
     User: 'User'
     hello: 'String'
   }
   Society: { // field return type name
+    events: 'Event'
+    id: 'ID'
+    name: 'String'
+    union: 'Union'
+    unionRequests: 'Union'
+    userRequests: 'User'
+    users: 'User'
+  }
+  Uni: { // field return type name
     id: 'ID'
     name: 'String'
   }
   Union: { // field return type name
     id: 'ID'
     name: 'String'
+    societies: 'Society'
+    societyRequests: 'Society'
+    uni: 'Uni'
+    userRequests: 'User'
+    users: 'User'
   }
   User: { // field return type name
     email: 'String'
-    firstName: 'String'
     id: 'ID'
-    lastName: 'String'
+    name: 'String'
     password: 'String'
-    token: 'String'
+    societies: 'Society'
+    societyRequests: 'Society'
+    type: 'String'
+    unionRequests: 'Union'
+    unions: 'Union'
   }
   Node: { // field return type name
     id: 'ID'
+  }
+  Token: { // field return type name
+    jwt: 'String'
   }
 }
 
@@ -142,21 +201,27 @@ export interface NexusGenArgTypes {
   Mutation: {
     createUser: { // args
       email?: string | null; // String
-      firstName?: string | null; // String
-      lastName?: string | null; // String
+      name?: string | null; // String
       password?: string | null; // String
-      token?: string | null; // String
+      type?: string | null; // String
+    }
+    loginUser: { // args
+      email?: string | null; // String
+      password?: string | null; // String
     }
   }
 }
 
 export interface NexusGenAbstractTypeMembers {
-  Node: "Experience" | "Society" | "Union" | "User"
+  Node: "Event" | "Society" | "Uni" | "Union" | "User"
+  Token: "AuthenticatedUserResponse"
 }
 
 export interface NexusGenTypeInterfaces {
-  Experience: "Node"
+  AuthenticatedUserResponse: "Token"
+  Event: "Node"
   Society: "Node"
+  Uni: "Node"
   Union: "Node"
   User: "Node"
 }
@@ -179,9 +244,9 @@ export type NexusGenAbstractsUsingStrategyResolveType = never;
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {
-    isTypeOf: false
-    resolveType: true
+    resolveType: false
     __typename: false
+    isTypeOf: false
   }
 }
 

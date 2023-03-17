@@ -11,23 +11,59 @@ model user {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   email    String @unique
   password String
-  token String?
-  firstName String?
-  lastName String?
+  name     String
+  type     String[]
+  societyIds           String[]    @db.ObjectId
+  societies            society[]  @relation(name: "userSocieties", fields: [societyIds], references: [id])
+  unionIds             String[]    @db.ObjectId
+  unions               union[]    @relation(name: "userUnions", fields: [unionIds], references: [id])
+  societyRequestIds    String[]    @db.ObjectId
+  societyRequests      society[]  @relation(name: "userSocietyRequests", fields: [societyRequestIds], references: [id])
+  unionRequestIds      String[]    @db.ObjectId
+  unionRequests        union[]    @relation(name: "userUnionRequests", fields: [unionRequestIds], references: [id])
 }
 
-model experience {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  astroid String
-  name    String
+model event {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  type       String
+  society    society?  @relation(fields: [societyId], references: [id])
+  societyId  String? @db.ObjectId
 }
 
 model society {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  userIds         String[]  @db.ObjectId
+  users           user[]    @relation(name: "userSocieties", fields: [userIds], references: [id])
+  userRequestIds  String[]  @db.ObjectId
+  userRequests    user[]    @relation(name: "userSocietyRequests", fields: [userRequestIds], references: [id])
+  eventIds        String[]  @db.ObjectId
+  events          event[]  
+  unionId         String? @db.ObjectId  
+  union           union?    @relation(fields: [unionId], references: [id])
+  unionRequestIds      String[]    @db.ObjectId
+  unionRequests        union[]    @relation(name: "societyUnionRequests", fields: [unionRequestIds], references: [id])
 }
 
 model union {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  uni             uni?    @relation(fields: [uniId], references: [id])
+  uniId           String?  @db.ObjectId  @unique
+  userIds         String[]  @db.ObjectId
+  users           user[]    @relation(name: "userUnions", fields: [userIds], references: [id])
+  userRequestIds  String[]  @db.ObjectId
+  userRequests    user[]    @relation(name: "userUnionRequests", fields: [userRequestIds], references: [id])
+  societies       society[]  
+  societyIds      String[]  @db.ObjectId
+  societyRequestIds    String[]    @db.ObjectId
+  societyRequests      society[]  @relation(name: "societyUnionRequests", fields: [societyRequestIds], references: [id])
+}
+
+model uni {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  name       String @unique
+  unionId    String? @db.ObjectId  
+  union      union?
 }
