@@ -29,11 +29,14 @@ model event {
   type       String
   society    society?  @relation(fields: [societyId], references: [id])
   societyId  String? @db.ObjectId
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
 }
 
 model society {
   id              String  @id @default(auto()) @map("_id") @db.ObjectId
   name            String
+  shortName       String
   userIds         String[]  @db.ObjectId
   users           user[]    @relation(name: "userSocieties", fields: [userIds], references: [id])
   userRequestIds  String[]  @db.ObjectId
@@ -44,11 +47,14 @@ model society {
   union           union?    @relation(fields: [unionId], references: [id])
   unionRequestIds      String[]    @db.ObjectId
   unionRequests        union[]    @relation(name: "societyUnionRequests", fields: [unionRequestIds], references: [id])
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
 }
 
 model union {
   id              String  @id @default(auto()) @map("_id") @db.ObjectId
   name            String
+  shortName       String 
   uni             uni?    @relation(fields: [uniId], references: [id])
   uniId           String?  @db.ObjectId  @unique
   userIds         String[]  @db.ObjectId
@@ -59,6 +65,8 @@ model union {
   societyIds      String[]  @db.ObjectId
   societyRequestIds    String[]    @db.ObjectId
   societyRequests      society[]  @relation(name: "societyUnionRequests", fields: [societyRequestIds], references: [id])
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
 }
 
 model uni {

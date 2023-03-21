@@ -10,6 +10,9 @@ export const Society = objectType({
   definition(t) {
     t.implements(Node)
     t.string('name')
+    t.string('shortName')
+    t.string('createdAt')
+    t.string('updatedAt')
     t.list.field('users', {
       type: 'User',
       resolve: (parent) => {

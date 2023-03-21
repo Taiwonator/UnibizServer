@@ -10,6 +10,9 @@ export const Union = objectType({
   definition(t) {
     t.implements(Node)
     t.string('name')
+    t.string('shortName')
+    t.string('createdAt')
+    t.string('updatedAt')
     t.nullable.field('uni', {
       type: 'Uni',
       resolve: (parent) => {

@@ -7,11 +7,14 @@ type AuthenticatedUserResponse implements Token {
 }
 
 type Event implements Node {
+  createdAt: String
+
   """Unique identifier for the resource"""
   id: ID
   name: String
   society: Society
   type: String
+  updatedAt: String
 }
 
 type Mutation {
@@ -34,13 +37,16 @@ type Query {
 }
 
 type Society implements Node {
+  createdAt: String
   events: [Event]
 
   """Unique identifier for the resource"""
   id: ID
   name: String
+  shortName: String
   union: [Union]
   unionRequests: [Union]
+  updatedAt: String
   userRequests: [User]
   users: [User]
 }
@@ -56,12 +62,16 @@ type Uni implements Node {
 }
 
 type Union implements Node {
+  createdAt: String
+
   """Unique identifier for the resource"""
   id: ID
   name: String
+  shortName: String
   societies: [Society]
   societyRequests: [Society]
   uni: Uni
+  updatedAt: String
   userRequests: [User]
   users: [User]
 }

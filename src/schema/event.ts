@@ -11,6 +11,8 @@ export const Event = objectType({
     t.implements(Node)
     t.string('name')
     t.string('type')
+    t.string('createdAt')
+    t.string('updatedAt')
     t.field('society', {
       type: 'Society',
       resolve: (parent) => {

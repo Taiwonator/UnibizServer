@@ -32,23 +32,31 @@ export interface NexusGenObjects {
     jwt?: string | null; // String
   }
   Event: { // root type
+    createdAt?: string | null; // String
     id?: string | null; // ID
     name?: string | null; // String
     type?: string | null; // String
+    updatedAt?: string | null; // String
   }
   Mutation: {};
   Query: {};
   Society: { // root type
+    createdAt?: string | null; // String
     id?: string | null; // ID
     name?: string | null; // String
+    shortName?: string | null; // String
+    updatedAt?: string | null; // String
   }
   Uni: { // root type
     id?: string | null; // ID
     name?: string | null; // String
   }
   Union: { // root type
+    createdAt?: string | null; // String
     id?: string | null; // ID
     name?: string | null; // String
+    shortName?: string | null; // String
+    updatedAt?: string | null; // String
   }
   User: { // root type
     email?: string | null; // String
@@ -76,10 +84,12 @@ export interface NexusGenFieldTypes {
     jwt: string | null; // String
   }
   Event: { // field return type
+    createdAt: string | null; // String
     id: string | null; // ID
     name: string | null; // String
     society: NexusGenRootTypes['Society'] | null; // Society
     type: string | null; // String
+    updatedAt: string | null; // String
   }
   Mutation: { // field return type
     createUser: NexusGenRootTypes['AuthenticatedUserResponse'] | null; // AuthenticatedUserResponse
@@ -94,11 +104,14 @@ export interface NexusGenFieldTypes {
     hello: string | null; // String
   }
   Society: { // field return type
+    createdAt: string | null; // String
     events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     id: string | null; // ID
     name: string | null; // String
+    shortName: string | null; // String
     union: Array<NexusGenRootTypes['Union'] | null> | null; // [Union]
     unionRequests: Array<NexusGenRootTypes['Union'] | null> | null; // [Union]
+    updatedAt: string | null; // String
     userRequests: Array<NexusGenRootTypes['User'] | null> | null; // [User]
     users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
   }
@@ -107,11 +120,14 @@ export interface NexusGenFieldTypes {
     name: string | null; // String
   }
   Union: { // field return type
+    createdAt: string | null; // String
     id: string | null; // ID
     name: string | null; // String
+    shortName: string | null; // String
     societies: Array<NexusGenRootTypes['Society'] | null> | null; // [Society]
     societyRequests: Array<NexusGenRootTypes['Society'] | null> | null; // [Society]
     uni: NexusGenRootTypes['Uni'] | null; // Uni
+    updatedAt: string | null; // String
     userRequests: Array<NexusGenRootTypes['User'] | null> | null; // [User]
     users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
   }
@@ -139,10 +155,12 @@ export interface NexusGenFieldTypeNames {
     jwt: 'String'
   }
   Event: { // field return type name
+    createdAt: 'String'
     id: 'ID'
     name: 'String'
     society: 'Society'
     type: 'String'
+    updatedAt: 'String'
   }
   Mutation: { // field return type name
     createUser: 'AuthenticatedUserResponse'
@@ -157,11 +175,14 @@ export interface NexusGenFieldTypeNames {
     hello: 'String'
   }
   Society: { // field return type name
+    createdAt: 'String'
     events: 'Event'
     id: 'ID'
     name: 'String'
+    shortName: 'String'
     union: 'Union'
     unionRequests: 'Union'
+    updatedAt: 'String'
     userRequests: 'User'
     users: 'User'
   }
@@ -170,11 +191,14 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
   }
   Union: { // field return type name
+    createdAt: 'String'
     id: 'ID'
     name: 'String'
+    shortName: 'String'
     societies: 'Society'
     societyRequests: 'Society'
     uni: 'Uni'
+    updatedAt: 'String'
     userRequests: 'User'
     users: 'User'
   }
