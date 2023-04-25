@@ -208,7 +208,6 @@ export const UserCreateMutation = mutationType({
               ...args,
               email,
               name,
-              password: hash,
             }
             const createdCredentialsUser = await prisma.credentials_user.create({ 
               data: { password: hash }
