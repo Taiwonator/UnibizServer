@@ -346,6 +346,11 @@ export const DeleteEventMutation = mutationField('deleteEvent', {
     }
 
     try {
+      if (event.locationId) {
+        const deletedLocation = await prisma.location.delete({
+          where: { id: event.locationId }
+        })
+      }
       const deletedEvent = await prisma.event.delete({
         where: { id },
       })

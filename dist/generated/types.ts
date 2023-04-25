@@ -55,7 +55,6 @@ export interface NexusGenObjects {
   EventImage: { // root type
     eventId?: string | null; // String
     eventImageUrl?: string | null; // String
-    id?: string | null; // ID
   }
   FAQ: { // root type
     answer?: string | null; // String
@@ -105,7 +104,7 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  Node: NexusGenRootTypes['Event'] | NexusGenRootTypes['EventImage'] | NexusGenRootTypes['FAQ'] | NexusGenRootTypes['Location'] | NexusGenRootTypes['Society'] | NexusGenRootTypes['State'] | NexusGenRootTypes['Uni'] | NexusGenRootTypes['Union'] | NexusGenRootTypes['User'];
+  Node: NexusGenRootTypes['Event'] | NexusGenRootTypes['FAQ'] | NexusGenRootTypes['Location'] | NexusGenRootTypes['Society'] | NexusGenRootTypes['State'] | NexusGenRootTypes['Uni'] | NexusGenRootTypes['Union'] | NexusGenRootTypes['User'];
   Token: NexusGenRootTypes['AuthenticatedUserResponse'];
 }
 
@@ -145,7 +144,6 @@ export interface NexusGenFieldTypes {
   EventImage: { // field return type
     eventId: string | null; // String
     eventImageUrl: string | null; // String
-    id: string | null; // ID
   }
   FAQ: { // field return type
     answer: string | null; // String
@@ -299,7 +297,6 @@ export interface NexusGenFieldTypeNames {
   EventImage: { // field return type name
     eventId: 'String'
     eventImageUrl: 'String'
-    id: 'ID'
   }
   FAQ: { // field return type name
     answer: 'String'
@@ -601,14 +598,13 @@ export interface NexusGenArgTypes {
 
 export interface NexusGenAbstractTypeMembers {
   Group: "Society" | "Union"
-  Node: "Event" | "EventImage" | "FAQ" | "Location" | "Society" | "State" | "Uni" | "Union" | "User"
+  Node: "Event" | "FAQ" | "Location" | "Society" | "State" | "Uni" | "Union" | "User"
   Token: "AuthenticatedUserResponse"
 }
 
 export interface NexusGenTypeInterfaces {
   AuthenticatedUserResponse: "Token"
   Event: "Node"
-  EventImage: "Node"
   FAQ: "Node"
   Location: "Node"
   Society: "Node"

@@ -31,12 +31,9 @@ type Event implements Node {
   updatedAt: String
 }
 
-type EventImage implements Node {
+type EventImage {
   eventId: String
   eventImageUrl: String
-
-  """Unique identifier for the resource"""
-  id: ID
 }
 
 enum EventType {
