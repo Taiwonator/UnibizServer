@@ -15,6 +15,7 @@ import { embellishHeader } from './middleware/header-embellisher.js';
 import { authenticateToken } from './middleware/token-authenticator.js';
 import { applyPermissions } from './middleware/permissions.js';
 import { graphqlMiddleware } from './middleware/graphql-middleware.js';
+import { useSofa } from 'sofa-api';
 const client = new PrismaClient();
 const app = express();
 const httpServer = http.createServer(app);
@@ -53,6 +54,10 @@ app.use(bodyParser.json());
 app.use(embellishHeader);
 app.use(authenticateToken);
 app.use('/graphql', graphqlMiddleware(server, client));
+app.use('/rest', useSofa({
+  basePath: '/rest',
+  schema
+}));
 await new Promise(resolve => httpServer.listen({
   port: 4000
 }, resolve));

@@ -35,7 +35,6 @@ export const Society = objectType({
             eventImageUrls: true
           }
         })
-        console.log('e')
         return events.flatMap(event => event.eventImageUrls.map(imageUrl => ({ eventId: event.id, eventImageUrl: imageUrl })))
       }
     })
