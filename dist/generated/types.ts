@@ -99,7 +99,6 @@ export interface NexusGenObjects {
     email?: string | null; // String
     id?: string | null; // ID
     name?: string | null; // String
-    password?: string | null; // String
     type?: Array<string | null> | null; // [String]
   }
 }
@@ -255,7 +254,6 @@ export interface NexusGenFieldTypes {
     email: string | null; // String
     id: string | null; // ID
     name: string | null; // String
-    password: string | null; // String
     societies: Array<NexusGenRootTypes['Society'] | null> | null; // [Society]
     societyRequests: Array<NexusGenRootTypes['Society'] | null> | null; // [Society]
     state: NexusGenRootTypes['State'] | null; // State
@@ -409,7 +407,6 @@ export interface NexusGenFieldTypeNames {
     email: 'String'
     id: 'ID'
     name: 'String'
-    password: 'String'
     societies: 'Society'
     societyRequests: 'Society'
     state: 'State'

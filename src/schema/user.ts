@@ -205,7 +205,6 @@ export const UserCreateMutation = mutationType({
 
         try {
             const user: Prisma.userCreateInput = { 
-              ...args,
               email,
               name,
             }
@@ -281,7 +280,6 @@ export const PasswordlessUserCreateMutation = mutationField('createPasswordlessU
         // NEW USER
         try {
             const user: Prisma.userCreateInput = { 
-              ...args,
               email,
               name
             }

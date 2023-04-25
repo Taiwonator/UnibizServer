@@ -213,7 +213,6 @@ type User implements Node {
   """Unique identifier for the resource"""
   id: ID
   name: String
-  password: String
   societies: [Society]
   societyRequests: [Society]
   state: State
