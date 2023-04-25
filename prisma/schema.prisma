@@ -10,7 +10,6 @@ datasource db {
 model user {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   email    String @unique
-  password String
   name     String
   type     String[]
   societyIds           String[]    @db.ObjectId
@@ -21,14 +20,51 @@ model user {
   societyRequests      society[]  @relation(name: "userSocietyRequests", fields: [societyRequestIds], references: [id])
   unionRequestIds      String[]    @db.ObjectId
   unionRequests        union[]    @relation(name: "userUnionRequests", fields: [unionRequestIds], references: [id])
+  auths auth_method[] @relation(name: "userAuths")
+  state user_state? @relation(name: "userState")
+}
+
+model user_state {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String? @db.ObjectId @unique
+  user user? @relation(name: "userState", fields: [userId], references: [id])
+  currentGroup  String? @db.ObjectId
+  previouslyLoggedIn   DateTime?
+}
+
+model auth_method {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  method AuthenticationMethod
+  authId String @db.ObjectId
+  userId  String @db.ObjectId  
+  user     user    @relation(name: "userAuths", fields: [userId], references: [id])
+}
+
+model credentials_user {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  password String
+}
+
+model google_user {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
 }
 
 model event {
   id         String @id @default(auto()) @map("_id") @db.ObjectId
+  description String?
+  slug       String @unique
   name       String
-  type       String
   society    society?  @relation(fields: [societyId], references: [id])
   societyId  String? @db.ObjectId
+  location   location?  @relation(fields: [locationId], references: [id])
+  locationId String?  @db.ObjectId  @unique
+  tags   EventType[]
+  date DateTime @default(now())
+  thumbnailUrl  String?
+  bannerUrl     String?
+  eventImageUrls    String[]
+  registerLink String?
+  likes       Int @default(0)
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
 }
@@ -37,6 +73,8 @@ model society {
   id              String  @id @default(auto()) @map("_id") @db.ObjectId
   name            String
   shortName       String
+  description     String?
+  imageUrl     String?
   userIds         String[]  @db.ObjectId
   users           user[]    @relation(name: "userSocieties", fields: [userIds], references: [id])
   userRequestIds  String[]  @db.ObjectId
@@ -55,6 +93,9 @@ model union {
   id              String  @id @default(auto()) @map("_id") @db.ObjectId
   name            String
   shortName       String 
+  imageUrl     String?
+  faqs            faqs[] 
+  faqIds          String[] @db.ObjectId 
   uni             uni?    @relation(fields: [uniId], references: [id])
   uniId           String?  @db.ObjectId  @unique
   userIds         String[]  @db.ObjectId
@@ -69,9 +110,67 @@ model union {
   updatedAt        DateTime           @updatedAt
 }
 
+model faqs {
+  id String  @id @default(auto()) @map("_id") @db.ObjectId
+  question            String
+  answer            String
+  unionId    String? @db.ObjectId  
+  union      union? @relation(fields: [unionId], references: [id])
+}
+
 model uni {
   id         String @id @default(auto()) @map("_id") @db.ObjectId
   name       String @unique
   unionId    String? @db.ObjectId  
   union      union?
+}
+
+enum AuthenticationMethod {
+  GOOGLE
+  CREDENTIALS
+}
+
+model location {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  type     LocationType
+  address  String?
+  link     String?
+  eventId String? @db.ObjectId  @unique
+  event event?
+}
+
+enum LocationType {
+  ADDRESS
+  ONLINE
+  TBD
+}
+
+enum EventType {
+  ALUMNI_REUNION
+  ART_EXHIBIT
+  CAMPUS_TOUR
+  CAREER_FAIR
+  CHARITY_EVENT
+  CLUB_FAIR
+  CLUB_MEETING
+  CONCERT
+  DEBATE_EVENT
+  GAMING_EVENT
+  GUEST_SPEAKER
+  HACKATHON
+  LECTURE
+  MUSIC_EVENT
+  MOVIE_NIGHT
+  NETWORKING_EVENT
+  PERFORMANCE
+  POLITICAL_EVENT
+  RELIGIOUS_EVENT
+  RESEARCH_EVENT
+  SEMINAR
+  SPORTS_GAME
+  STUDY_SESSION
+  VOLUNTEER_EVENT
+  WELLNESS_EVENT
+  WORKSHOP
+  OTHER
 }

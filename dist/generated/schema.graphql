@@ -6,20 +6,123 @@ type AuthenticatedUserResponse implements Token {
   jwt: String
 }
 
+type CreateEventResponse {
+  id: String
+  slug: String
+}
+
 type Event implements Node {
+  bannerUrl: String
   createdAt: String
+  date: String
+  description: String
+  eventImageUrls: [String]
 
   """Unique identifier for the resource"""
   id: ID
+  likes: Int
+  location: Location
   name: String
+  registerLink: String
+  slug: String
   society: Society
-  type: String
+  tags: [EventType]
+  thumbnailUrl: String
   updatedAt: String
 }
 
+type EventImage implements Node {
+  eventId: String
+  eventImageUrl: String
+
+  """Unique identifier for the resource"""
+  id: ID
+}
+
+enum EventType {
+  ALUMNI_REUNION
+  ART_EXHIBIT
+  CAMPUS_TOUR
+  CAREER_FAIR
+  CHARITY_EVENT
+  CLUB_FAIR
+  CLUB_MEETING
+  CONCERT
+  DEBATE_EVENT
+  GAMING_EVENT
+  GUEST_SPEAKER
+  HACKATHON
+  LECTURE
+  MOVIE_NIGHT
+  MUSIC_EVENT
+  NETWORKING_EVENT
+  OTHER
+  PERFORMANCE
+  POLITICAL_EVENT
+  RELIGIOUS_EVENT
+  RESEARCH_EVENT
+  SEMINAR
+  SPORTS_GAME
+  STUDY_SESSION
+  VOLUNTEER_EVENT
+  WELLNESS_EVENT
+  WORKSHOP
+}
+
+type FAQ implements Node {
+  answer: String
+
+  """Unique identifier for the resource"""
+  id: ID
+  question: String
+}
+
+union Group = Society | Union
+
+type Location implements Node {
+  address: String
+  event: Event
+
+  """Unique identifier for the resource"""
+  id: ID
+  link: String
+  type: String
+}
+
+enum LocationType {
+  ADDRESS
+  ONLINE
+  TBD
+}
+
 type Mutation {
-  createUser(email: String, name: String, password: String, type: String): AuthenticatedUserResponse
-  loginUser(email: String, password: String): AuthenticatedUserResponse
+  addEventImageUrls(id: String!, imageUrls: [String!]!): Event
+  createEvent(address: String, bannerUrl: String, date: String!, description: String, locationLink: String, name: String!, registerLink: String, societyId: String!, tags: [EventType], thumbnailUrl: String): CreateEventResponse
+  createFAQ(answer: String!, question: String!, unionId: String!): FAQ
+  createPasswordlessUser(email: String, name: String): AuthenticatedUserResponse
+  createSociety(description: String, imageUrl: String, name: String!, shortName: String!, userId: String!): Society
+  createUser(email: String, name: String, password: String): AuthenticatedUserResponse
+  deleteEvent(id: String!): Event
+  deleteEventImageUrl(id: String!, imageUrl: String!): String
+  deleteFAQ(id: String!): FAQ
+  deleteSociety(id: String!): Society
+  editEvent(address: String, bannerUrl: String, date: String, description: String, id: String!, locationLink: String, locationType: LocationType, name: String, registerLink: String, tags: [EventType], thumbnailUrl: String): Event
+  editFAQ(answer: String, id: String!, question: String): FAQ
+  editSociety(description: String, id: String!, imageUrl: String, name: String, shortName: String): Society
+  editUnion(id: String!, imageUrl: String, name: String, shortName: String): Union
+  leaveGroup(groupId: String!, userId: String!): Group
+  leaveSociety(societyId: String!, userId: String!): Society
+  likeEvent(id: String!): Event
+  loginCredentialsUser(email: String, password: String): AuthenticatedUserResponse
+  processSocietyRequest(accept: Boolean!, societyId: String!, unionId: String!): Union
+  processUserRequest(accept: Boolean!, groupId: String!, userId: String!): Group
+  removeSocietyFromUnion(societyId: String!, unionId: String!): Union
+  removeUserFromGroup(groupId: String!, userId: String!): Group
+  requestSocietyFromUser(societyId: String!, userId: String!): User
+  requestUnionFromSociety(societyId: String!, unionId: String!): Society
+  requestUnionFromUser(unionId: String!, userId: String!): User
+  setUserCurrentGroup(groupId: String, userId: String): State
+  updateUserName(id: String!, name: String): User
 }
 
 interface Node {
@@ -28,8 +131,17 @@ interface Node {
 }
 
 type Query {
-  Event: [Event]
-  Society: [Society]
+  Event(societyId: String, tags: [EventType], unionId: String): [Event]
+  FindEventById(id: String): Event
+  FindEventBySocietyId(societyId: String): [Event]
+  FindEventByUnionId(unionId: String): [Event]
+  FindGroupById(id: String): Group
+  FindPastEvents(societyId: String, unionId: String): [Event]
+  FindSocietyById(id: String): Society
+  FindUnverifiedEvents: [Event]
+  FindUserByEmail(email: String): User
+  FindUserById(id: String): User
+  Society(verified: Boolean): [Society]
   Uni: [Uni]
   Union: [Union]
   User: [User]
@@ -38,17 +150,33 @@ type Query {
 
 type Society implements Node {
   createdAt: String
+  description: String
+  eventIds: [String]
+  eventImageUrls: [EventImage]
   events: [Event]
 
   """Unique identifier for the resource"""
   id: ID
+  imageUrl: String
   name: String
   shortName: String
-  union: [Union]
+  totalEventLikes: Int
+  union: Union
   unionRequests: [Union]
   updatedAt: String
+  userIds: [String]
+  userRequestIds: [String]
   userRequests: [User]
   users: [User]
+}
+
+type State implements Node {
+  currentGroup: String
+
+  """Unique identifier for the resource"""
+  id: ID
+  previouslyLoggedIn: String
+  user: User
 }
 
 interface Token {
@@ -63,15 +191,21 @@ type Uni implements Node {
 
 type Union implements Node {
   createdAt: String
+  faqs: [FAQ]
 
   """Unique identifier for the resource"""
   id: ID
+  imageUrl: String
   name: String
   shortName: String
   societies: [Society]
+  societyIds: [String]
+  societyRequestIds: [String]
   societyRequests: [Society]
   uni: Uni
   updatedAt: String
+  userIds: [String]
+  userRequestIds: [String]
   userRequests: [User]
   users: [User]
 }
@@ -82,9 +216,9 @@ type User implements Node {
   """Unique identifier for the resource"""
   id: ID
   name: String
-  password: String
   societies: [Society]
   societyRequests: [Society]
+  state: State
   type: [String]
   unionRequests: [Union]
   unions: [Union]
