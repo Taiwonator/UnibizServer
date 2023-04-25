@@ -5,10 +5,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "prepare": "npx prisma generate",
     "type-check": "tsc",
-    "prepare": "cp public/manifest.json dist/",
-    "compile": "yarn prepare && babel src --out-dir dist --extensions \".ts,.tsx\"",
-    "start": "tsc && yarn compile && node ./dist/index.js"
+    "compile": "babel src --out-dir dist --extensions \".ts,.tsx\"",
+    "start": "yarn prepare && yarn type-check && yarn compile && node ./dist/index.js"
   },
   "dependencies": {
     "@apollo/server": "^4.5.0",

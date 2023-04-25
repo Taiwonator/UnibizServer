@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "strict": false,
+    "skipLibCheck": true,
     "rootDirs": ["src", "src/schema"],
     "outDir": "dist",
     "baseUrl": ".",
@@ -14,5 +16,13 @@
     "emitDeclarationOnly": true,
     // Ensure that Babel can safely transpile files in the TypeScript project
     "isolatedModules": true,
-  }
+  },
+  "include": [
+    "src/*.ts",
+    "src/**/.ts",
+    "src/**/**/.ts",
+    "node_modules/.prisma/client/index.d.ts",
+    "node_modules/@prisma/client/index.d.ts"
+  ],
+  "exclude": ["node_modules"]
 }

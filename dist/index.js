@@ -53,9 +53,9 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(embellishHeader);
 app.use(authenticateToken);
-app.use('/graphql', graphqlMiddleware(server, client));
-app.use('/rest', useSofa({
-  basePath: '/rest',
+app.use('/api/graphql', graphqlMiddleware(server, client));
+app.use('/api', useSofa({
+  basePath: '/api',
   schema
 }));
 await new Promise(resolve => httpServer.listen({
