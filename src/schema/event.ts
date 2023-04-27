@@ -74,7 +74,6 @@ export const EventQueryDef = (t: ObjectDefinitionBlock<"Query">) => {
         } catch(err) {
           console.log(err)
         }
-        
       },
     });
     t.field('FindEventById', {
@@ -143,6 +142,35 @@ export const EventQueryDef = (t: ObjectDefinitionBlock<"Query">) => {
           console.log(err)
           return null
         }
+      },
+    });
+
+    t.list.field('FindSimilarEvents', {
+      type: Event,
+      args: {
+        eventId: nonNull(stringArg()),
+      },
+      resolve: async (_, { eventId }) => {
+        const event = await prisma.event.findUnique({ where: { id: eventId } });
+        if (!event) {
+          throw new Error(`Event with ID ${eventId} not found.`);
+        }
+         const currentTime = new Date();
+        const events = await prisma.event.findMany({
+          where: {
+            AND: [
+              { id: { not: { equals: eventId } } },
+              { tags: { hasSome: event.tags.map((tag: string) => EventType[tag]) } },
+              { date: { gt: currentTime } }
+            ],
+          },
+        });
+        const sortedEvents = events.sort((a, b) => {
+          const aTags = a.tags.filter((tag) => event.tags.includes(tag));
+          const bTags = b.tags.filter((tag) => event.tags.includes(tag));
+          return bTags.length - aTags.length;
+        });
+        return sortedEvents;
       },
     });
 

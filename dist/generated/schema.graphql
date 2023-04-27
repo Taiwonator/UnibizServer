@@ -134,6 +134,7 @@ type Query {
   FindEventByUnionId(unionId: String): [Event]
   FindGroupById(id: String): Group
   FindPastEvents(societyId: String, unionId: String): [Event]
+  FindSimilarEvents(eventId: String!): [Event]
   FindSocietyById(id: String): Society
   FindUnverifiedEvents: [Event]
   FindUserByEmail(email: String): User

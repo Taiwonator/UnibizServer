@@ -193,6 +193,7 @@ export interface NexusGenFieldTypes {
     FindEventByUnionId: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     FindGroupById: NexusGenRootTypes['Group'] | null; // Group
     FindPastEvents: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
+    FindSimilarEvents: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     FindSocietyById: NexusGenRootTypes['Society'] | null; // Society
     FindUnverifiedEvents: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     FindUserByEmail: NexusGenRootTypes['User'] | null; // User
@@ -346,6 +347,7 @@ export interface NexusGenFieldTypeNames {
     FindEventByUnionId: 'Event'
     FindGroupById: 'Group'
     FindPastEvents: 'Event'
+    FindSimilarEvents: 'Event'
     FindSocietyById: 'Society'
     FindUnverifiedEvents: 'Event'
     FindUserByEmail: 'User'
@@ -580,6 +582,9 @@ export interface NexusGenArgTypes {
     FindPastEvents: { // args
       societyId?: string | null; // String
       unionId?: string | null; // String
+    }
+    FindSimilarEvents: { // args
+      eventId: string; // String!
     }
     FindSocietyById: { // args
       id?: string | null; // String
