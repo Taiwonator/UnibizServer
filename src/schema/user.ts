@@ -266,7 +266,7 @@ export const PasswordlessUserCreateMutation = mutationField('createPasswordlessU
               }
             }
           })
-          // Find auth mode, and add new created google 
+          
           const jwt = createJWT({ 
                 id: updatedUser.id,
                 email: updatedUser.email,
@@ -281,7 +281,10 @@ export const PasswordlessUserCreateMutation = mutationField('createPasswordlessU
         try {
             const user: Prisma.userCreateInput = { 
               email,
-              name
+              name,
+              state: {
+                create: {}
+              }
             }
             const createdGoogleUser = await prisma.google_user.create({ data: {} })
             try {
@@ -293,8 +296,6 @@ export const PasswordlessUserCreateMutation = mutationField('createPasswordlessU
                   userId: createdUser.id 
                 }
               })
-              await prisma.user_state.create({ data: { userId: createdUser.id } })
-
               const jwt = createJWT({ 
                   id: createdUser.id,
                   email: createdUser.email,

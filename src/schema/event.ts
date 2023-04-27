@@ -265,23 +265,7 @@ export const EventCreateMutation = mutationField('createEvent', {
         tags: arg({ type: list(EventTypeEnum) }),
     },
     async resolve(_, args) {
-      const eventArgs = {
-          name: args.name,
-          slug: slugify(String(args.name)) + Date.now(),
-          description: args.description,
-          societyId: args.societyId,
-          registerLink: args.registerLink,
-          date: new Date(args.date),
-          bannerUrl: args.bannerUrl,
-          thumbnailUrl: args.thumbnailUrl,
-          tags: args.tags,
-      }
-
-      try {
-        const createdEvent = await prisma.event.create({
-          data: eventArgs
-        })
-        const getLocationType = () => {
+      const getLocationType = () => {
           if(args.address) {
             return LocationType.ADDRESS
           } else if (args.link) {
@@ -291,14 +275,43 @@ export const EventCreateMutation = mutationField('createEvent', {
           }
         }
 
-        const locationArgs = {
-            type: getLocationType(),
-            link: args.locationLink,
-            address: args.address,
-            eventId: createdEvent.id
-        }
+      const eventArgs = {
+          name: args.name,
+          slug: slugify(String(args.name)) + Date.now(),
+          description: args.description,
+          society: {
+            connect: {
+              id: args.societyId
+            }
+          },
+          registerLink: args.registerLink,
+          date: new Date(args.date),
+          bannerUrl: args.bannerUrl,
+          thumbnailUrl: args.thumbnailUrl,
+          tags: args.tags,
+          location: {
+            create: {
+              type: getLocationType(),
+              link: args.locationLink,
+              address: args.address,
+            }
+          }
+      }
 
-        const createdLocation = await prisma.location.create({ data: locationArgs })
+      try {
+        const createdEvent = await prisma.event.create({
+          data: eventArgs,
+        })
+  
+
+        // const locationArgs = {
+        //     type: getLocationType(),
+        //     link: args.locationLink,
+        //     address: args.address,
+        //     eventId: createdEvent.id
+        // }
+
+        // const createdLocation = await prisma.location.create({ data: locationArgs })
 
         return { slug: createdEvent.slug, id: createdEvent.id }
       } catch(err) {
