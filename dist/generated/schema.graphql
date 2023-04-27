@@ -93,6 +93,7 @@ enum LocationType {
 }
 
 type Mutation {
+  RecommendEvent(likedEventIds: [String!]!): [Event]
   addEventImageUrls(id: String!, imageUrls: [String!]!): Event
   createEvent(address: String, bannerUrl: String, date: String!, description: String, locationLink: String, name: String!, registerLink: String, societyId: String!, tags: [EventType], thumbnailUrl: String): CreateEventResponse
   createFAQ(answer: String!, question: String!, unionId: String!): FAQ
@@ -109,7 +110,7 @@ type Mutation {
   editUnion(id: String!, imageUrl: String, name: String, shortName: String): Union
   leaveGroup(groupId: String!, userId: String!): Group
   leaveSociety(societyId: String!, userId: String!): Society
-  likeEvent(id: String!): Event
+  likeEvent(eventId: String!, userId: String): Event
   loginCredentialsUser(email: String, password: String): AuthenticatedUserResponse
   processSocietyRequest(accept: Boolean!, societyId: String!, unionId: String!): Union
   processUserRequest(accept: Boolean!, groupId: String!, userId: String!): Group
@@ -213,6 +214,8 @@ type User implements Node {
 
   """Unique identifier for the resource"""
   id: ID
+  interestedEventIds: [String]
+  interestedEvents: [Event]
   name: String
   societies: [Society]
   societyRequests: [Society]

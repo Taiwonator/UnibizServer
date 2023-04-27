@@ -25,6 +25,34 @@ export const User = objectType({
         })
       }
     })
+
+    t.list.string('interestedEventIds', {
+      resolve: (parent) => {
+        return prisma.user.findUnique({
+          where: {
+            id: parent.id,
+          },
+        }).interestedEvents({
+          select: {
+            id: true,
+          },
+        }).then((events) => events.map((interestedEvent) => interestedEvent.id));
+      },
+    })
+
+      t.list.field('interestedEvents', {
+      type: 'Event',
+      resolve: (parent) => {
+        return prisma.event.findMany({
+          where: {
+            interestedUserIds: {
+              hasSome: [parent.id]
+            }
+          }
+        })
+      }
+    })
+
     t.list.field('societies', {
       type: 'Society',
       resolve: (parent) => {

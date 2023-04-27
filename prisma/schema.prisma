@@ -20,6 +20,8 @@ model user {
   societyRequests      society[]  @relation(name: "userSocietyRequests", fields: [societyRequestIds], references: [id])
   unionRequestIds      String[]    @db.ObjectId
   unionRequests        union[]    @relation(name: "userUnionRequests", fields: [unionRequestIds], references: [id])
+  interestedEventIds           String[]    @db.ObjectId
+  interestedEvents            event[]  @relation(name: "interestedUsers", fields: [interestedEventIds], references: [id])
   auths auth_method[] @relation(name: "userAuths")
   state user_state? @relation(name: "userState")
 }
@@ -65,6 +67,8 @@ model event {
   eventImageUrls    String[]
   registerLink String?
   likes       Int @default(0)
+  interestedUserIds         String[]  @db.ObjectId
+  interestedUsers           user[]    @relation(name: "interestedUsers", fields: [interestedUserIds], references: [id])
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
 }

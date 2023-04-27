@@ -155,13 +155,13 @@ export const EventQueryDef = (t: ObjectDefinitionBlock<"Query">) => {
         if (!event) {
           throw new Error(`Event with ID ${eventId} not found.`);
         }
-         const currentTime = new Date();
+        const currentTime = new Date();
         const events = await prisma.event.findMany({
           where: {
             AND: [
               { id: { not: { equals: eventId } } },
               { tags: { hasSome: event.tags.map((tag: string) => EventType[tag]) } },
-              { date: { gt: currentTime } }
+              { date: { gt: currentTime }}
             ],
           },
         });
@@ -228,7 +228,10 @@ export const EventEditMutation = mutationField('editEvent', {
   },
   async resolve(_, args) {
     const event = await prisma.event.findUnique({ where: { id: args.id } })
-    const location = await prisma.location.findUnique({ where: { eventId: args.id } })
+    const location = await prisma.location.findUnique({ where: { id: event.locationId } })
+
+      console.log('location: ', location, event.id)
+
 
     if (!event) {
       throw new Error(`Event with ID ${args.id} does not exist`)
@@ -250,6 +253,7 @@ export const EventEditMutation = mutationField('editEvent', {
         where: { id: args.id },
         data: eventArgs,
       })
+
 
       const locationArgs = {
         link: args.locationLink ?? location.link,
@@ -353,15 +357,36 @@ export const EventCreateMutation = mutationField('createEvent', {
 export const LikeEventMutation = mutationField('likeEvent', {
   type: Event,
   args: {
-    id: nonNull(stringArg()),
+    eventId: nonNull(stringArg()),
+    userId: stringArg(),
   },
-  resolve: async (_, { id }) => {
+  resolve: async (_, { eventId, userId }) => {
+    // Update user
+    if(userId) {
+      try {
+        await prisma.user.update({
+          where: { id: userId },
+          data: { 
+              interestedEvents: {
+                connect: { id: eventId }
+              }
+          },
+        });
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
+    }
+
+    // Update event
     try {
       const event = await prisma.event.findUnique({
-        where: { id },
+        where: { id: eventId },
       });
       const updatedEvent = await prisma.event.update({
-        where: { id },
+        where: { 
+          id: eventId, 
+        },
         data: { likes: event.likes + 1 },
       });
       console.log(updatedEvent)
@@ -466,5 +491,108 @@ export const DeleteEventImageUrl = mutationField('deleteEventImageUrl', {
       console.error(error);
       return error.message;
     }
+  },
+});
+
+
+export const RecommendEvent = mutationField('RecommendEvent', {
+  type: list(Event),
+  args: {
+    likedEventIds: nonNull(list(nonNull(stringArg()))),
+  },
+  resolve: async (_, { likedEventIds }) => {
+    // Step 1: Compute popularity of event types from liked events
+    const typeCounts = new Map<EventType, number>();
+    for (const eventId of likedEventIds) {
+      const event = await prisma.event.findUnique({
+        where: { id: eventId },
+        select: { tags: true },
+      });
+      if (!event) continue;
+      for (const tag of event.tags) {
+        typeCounts.set(tag, (typeCounts.get(tag) ?? 0) + 1);
+      }
+    }
+    const sortedTypes = [...typeCounts.entries()].sort((a, b) => b[1] - a[1]);
+    const totalTypeCount = sortedTypes.reduce((acc, [_, count]) => acc + count, 0);
+
+    console.log('sortedTypes', sortedTypes)
+    console.log('totalTypeCount', totalTypeCount)
+    console.log('likedEventIds', likedEventIds)
+
+   // Step 2: Compute event scores based on their own tags and the popularity of types from liked events
+    const currentTime = new Date()
+    const events = await prisma.event.findMany({
+      where: { 
+        AND: [
+          { id: { notIn: likedEventIds } },
+          { date: { gt: currentTime } }
+        ]
+      },
+      select: { id: true, name: true, tags: true, society: { select: { unionId: true } } },
+    });
+
+    const likedEvents = await Promise.all(
+      likedEventIds.map((likedId) =>
+        prisma.event.findUnique({
+          where: { id: likedId },
+          select: { society: { select: { unionId: true } } },
+        })
+      )
+    );
+    // const likedEvents = await prisma.event.findMany({
+    //     where: {
+    //       AND: [
+    //     { society: { unionId: { isSet: true } } },
+    //     ]
+    //     },
+    //     select: { 
+    //       id: true,
+    //       society: { select: { unionId: true } } 
+    //     },
+    //   })
+
+    console.log('events: ', events)
+
+      const scoredEvents = events.map((event) => {
+        const typeScore = event.tags.reduce((acc, tag) => {
+          const typeIndex = sortedTypes.findIndex(([type]) => type === tag);
+          const typeWeight =
+            typeIndex >= 0 ? (sortedTypes.length - typeIndex) / totalTypeCount : 0;
+          return acc + typeWeight;
+        }, 0);
+        const unionCount = new Map<string, number>();
+        for (const likedEvent of likedEvents) {
+          if (
+            likedEvent &&
+            likedEvent.society.unionId === event.society.unionId
+          ) {
+            unionCount.set(
+              event.society.unionId,
+              (unionCount.get(event.society.unionId) ?? 0) + 1
+            );
+          }
+        }
+        const sortedUnions = [...unionCount.entries()].sort(
+          (a, b) => b[1] - a[1]
+        );
+        return { eventId: event.id, event, score: typeScore * (sortedUnions[0]?.[1] ?? 0) };
+      });
+
+      const sortedScoredEvents =  scoredEvents.sort((a, b) => b.score - a.score);
+      console.log('sortedScoredEvents', sortedScoredEvents)
+
+      const splicedSortedEvents = sortedScoredEvents.slice(0, 3).filter(e => e.score !== 0)
+    
+      const rEvents = await Promise.all(
+        splicedSortedEvents.map((e) =>
+          prisma.event.findUnique({
+            where: { id: e.event.id }
+          })
+        )
+      );
+
+
+      return rEvents ?? null;
   },
 });

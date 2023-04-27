@@ -158,6 +158,7 @@ export interface NexusGenFieldTypes {
     type: string | null; // String
   }
   Mutation: { // field return type
+    RecommendEvent: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     addEventImageUrls: NexusGenRootTypes['Event'] | null; // Event
     createEvent: NexusGenRootTypes['CreateEventResponse'] | null; // CreateEventResponse
     createFAQ: NexusGenRootTypes['FAQ'] | null; // FAQ
@@ -254,6 +255,8 @@ export interface NexusGenFieldTypes {
   User: { // field return type
     email: string | null; // String
     id: string | null; // ID
+    interestedEventIds: Array<string | null> | null; // [String]
+    interestedEvents: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     name: string | null; // String
     societies: Array<NexusGenRootTypes['Society'] | null> | null; // [Society]
     societyRequests: Array<NexusGenRootTypes['Society'] | null> | null; // [Society]
@@ -312,6 +315,7 @@ export interface NexusGenFieldTypeNames {
     type: 'String'
   }
   Mutation: { // field return type name
+    RecommendEvent: 'Event'
     addEventImageUrls: 'Event'
     createEvent: 'CreateEventResponse'
     createFAQ: 'FAQ'
@@ -408,6 +412,8 @@ export interface NexusGenFieldTypeNames {
   User: { // field return type name
     email: 'String'
     id: 'ID'
+    interestedEventIds: 'String'
+    interestedEvents: 'Event'
     name: 'String'
     societies: 'Society'
     societyRequests: 'Society'
@@ -426,6 +432,9 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    RecommendEvent: { // args
+      likedEventIds: string[]; // [String!]!
+    }
     addEventImageUrls: { // args
       id: string; // String!
       imageUrls: string[]; // [String!]!
@@ -516,7 +525,8 @@ export interface NexusGenArgTypes {
       userId: string; // String!
     }
     likeEvent: { // args
-      id: string; // String!
+      eventId: string; // String!
+      userId?: string | null; // String
     }
     loginCredentialsUser: { // args
       email?: string | null; // String

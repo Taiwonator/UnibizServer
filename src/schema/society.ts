@@ -264,6 +264,13 @@ export const DeleteSocietyMutation = mutationField('deleteSociety', {
 
     try {
       const deletedSociety = await prisma.society.delete({ where: { id } })
+      if(deletedSociety.unionId) {
+        await prisma.union.update({ where: { id: deletedSociety.unionId }, data: {  
+          societyRequests: { disconnect: { id: deletedSociety.id } },
+          societies: { disconnect: { id: deletedSociety.id } }
+        }})
+      }
+
       return deletedSociety
     } catch (err) {
       console.log(err)
