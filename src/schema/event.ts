@@ -389,7 +389,6 @@ export const LikeEventMutation = mutationField('likeEvent', {
         },
         data: { likes: event.likes + 1 },
       });
-      console.log(updatedEvent)
       return updatedEvent;
     } catch (error) {
       console.log(error);
@@ -516,10 +515,6 @@ export const RecommendEvent = mutationField('RecommendEvent', {
     const sortedTypes = [...typeCounts.entries()].sort((a, b) => b[1] - a[1]);
     const totalTypeCount = sortedTypes.reduce((acc, [_, count]) => acc + count, 0);
 
-    console.log('sortedTypes', sortedTypes)
-    console.log('totalTypeCount', totalTypeCount)
-    console.log('likedEventIds', likedEventIds)
-
    // Step 2: Compute event scores based on their own tags and the popularity of types from liked events
     const currentTime = new Date()
     const events = await prisma.event.findMany({
@@ -552,8 +547,6 @@ export const RecommendEvent = mutationField('RecommendEvent', {
     //     },
     //   })
 
-    console.log('events: ', events)
-
       const scoredEvents = events.map((event) => {
         const typeScore = event.tags.reduce((acc, tag) => {
           const typeIndex = sortedTypes.findIndex(([type]) => type === tag);
@@ -580,7 +573,6 @@ export const RecommendEvent = mutationField('RecommendEvent', {
       });
 
       const sortedScoredEvents =  scoredEvents.sort((a, b) => b.score - a.score);
-      console.log('sortedScoredEvents', sortedScoredEvents)
 
       const splicedSortedEvents = sortedScoredEvents.slice(0, 3).filter(e => e.score !== 0)
     
