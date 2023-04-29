@@ -19,6 +19,7 @@ const rules = {
     return Boolean(true)
   }),
   isPublic: rule()((parent, args, ctx) => {
+    console.log('user: ', ctx.user)
     return Boolean(true)
   }),
   isNever: rule()(() => false)
