@@ -108,6 +108,7 @@ type Mutation {
   editFAQ(answer: String, id: String!, question: String): FAQ
   editSociety(description: String, id: String!, imageUrl: String, name: String, shortName: String): Society
   editUnion(id: String!, imageUrl: String, name: String, shortName: String): Union
+  generatePublicUserToken(email: String, token: String): AuthenticatedUserResponse
   leaveGroup(groupId: String!, userId: String!): Group
   leaveSociety(societyId: String!, userId: String!): Society
   likeEvent(eventId: String!, userId: String): Event
@@ -128,6 +129,25 @@ interface Node {
   id: ID
 }
 
+type PublicEvent implements Node {
+  bannerUrl: String
+  createdAt: String
+  date: String
+  description: String
+  eventImageUrls: [String]
+
+  """Unique identifier for the resource"""
+  id: ID
+  likes: Int
+  location: Location
+  name: String
+  registerLink: String
+  society: Society
+  tags: [EventType]
+  thumbnailUrl: String
+  updatedAt: String
+}
+
 type Query {
   Event(societyId: String, tags: [EventType], unionId: String): [Event]
   FindEventById(id: String): Event
@@ -135,11 +155,15 @@ type Query {
   FindEventByUnionId(unionId: String): [Event]
   FindGroupById(id: String): Group
   FindPastEvents(societyId: String, unionId: String): [Event]
+  FindPastPublicEvents(name: String, societyName: String, tags: [EventType], unionName: String): [PublicEvent]
   FindSimilarEvents(eventId: String!): [Event]
+  FindSimilarPublicEvents(eventId: String!): [PublicEvent]
   FindSocietyById(id: String): Society
   FindUnverifiedEvents: [Event]
+  FindUnverifiedPublicEvents: [PublicEvent]
   FindUserByEmail(email: String): User
   FindUserById(id: String): User
+  PublicEvent(name: String, societyName: String, tags: [EventType], unionName: String): [PublicEvent]
   Society(verified: Boolean): [Society]
   Uni: [Uni]
   Union: [Union]

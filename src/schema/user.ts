@@ -303,7 +303,6 @@ export const PasswordlessUserCreateMutation = mutationField('createPasswordlessU
           return { jwt }
         }
 
-  
 
         // NEW USER
         try {
@@ -350,12 +349,8 @@ export const setUserCurrentGroup = mutationField('setUserCurrentGroup', {
   },
   resolve: async(_, { userId, groupId }) => {
     let updatedState = await prisma.user_state.update({
-        where: {
-            userId: userId
-        },
-        data: {
-            currentGroup: groupId
-        }
+        where: { userId: userId },
+        data: { currentGroup: groupId }
     })
     return updatedState
   }

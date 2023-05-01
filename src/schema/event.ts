@@ -63,12 +63,15 @@ export const EventQueryDef = (t: ObjectDefinitionBlock<"Query">) => {
         if (eTags) { // Add condition to filter events by tags
         where = {
           ...where,
-          tags: { hasSome: eTags.map((tag: string) => EventType[tag]) }
+          tags: { hasSome: eTags.map((tag: string) => EventType[tag]) },
         }
       }
         try {
           const events = await prisma.event.findMany({
             where,
+            orderBy: {
+              date: 'desc'
+            }
           });
           return events;
         } catch(err) {
@@ -535,17 +538,6 @@ export const RecommendEvent = mutationField('RecommendEvent', {
         })
       )
     );
-    // const likedEvents = await prisma.event.findMany({
-    //     where: {
-    //       AND: [
-    //     { society: { unionId: { isSet: true } } },
-    //     ]
-    //     },
-    //     select: { 
-    //       id: true,
-    //       society: { select: { unionId: true } } 
-    //     },
-    //   })
 
       const scoredEvents = events.map((event) => {
         const typeScore = event.tags.reduce((acc, tag) => {
@@ -573,7 +565,6 @@ export const RecommendEvent = mutationField('RecommendEvent', {
       });
 
       const sortedScoredEvents =  scoredEvents.sort((a, b) => b.score - a.score);
-
       const splicedSortedEvents = sortedScoredEvents.slice(0, 3).filter(e => e.score !== 0)
     
       const rEvents = await Promise.all(

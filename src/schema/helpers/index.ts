@@ -54,11 +54,11 @@ export const Location = objectType({
   }
 })
 
-export const createJWT = (obj: object) => {
+export const createJWT = (obj: object, expiresIn=process.env.JWT_EXPIRES_IN) => {
   const jwt = jsonwebtoken.sign(
       { ...obj },
       process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN }
+      { expiresIn }
   )
   return jwt
 }

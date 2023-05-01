@@ -68,6 +68,20 @@ export interface NexusGenObjects {
     type?: string | null; // String
   }
   Mutation: {};
+  PublicEvent: { // root type
+    bannerUrl?: string | null; // String
+    createdAt?: string | null; // String
+    date?: string | null; // String
+    description?: string | null; // String
+    eventImageUrls?: Array<string | null> | null; // [String]
+    id?: string | null; // ID
+    likes?: number | null; // Int
+    name?: string | null; // String
+    registerLink?: string | null; // String
+    tags?: Array<NexusGenEnums['EventType'] | null> | null; // [EventType]
+    thumbnailUrl?: string | null; // String
+    updatedAt?: string | null; // String
+  }
   Query: {};
   Society: { // root type
     createdAt?: string | null; // String
@@ -104,7 +118,7 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  Node: NexusGenRootTypes['Event'] | NexusGenRootTypes['FAQ'] | NexusGenRootTypes['Location'] | NexusGenRootTypes['Society'] | NexusGenRootTypes['State'] | NexusGenRootTypes['Uni'] | NexusGenRootTypes['Union'] | NexusGenRootTypes['User'];
+  Node: NexusGenRootTypes['Event'] | NexusGenRootTypes['FAQ'] | NexusGenRootTypes['Location'] | NexusGenRootTypes['PublicEvent'] | NexusGenRootTypes['Society'] | NexusGenRootTypes['State'] | NexusGenRootTypes['Uni'] | NexusGenRootTypes['Union'] | NexusGenRootTypes['User'];
   Token: NexusGenRootTypes['AuthenticatedUserResponse'];
 }
 
@@ -173,6 +187,7 @@ export interface NexusGenFieldTypes {
     editFAQ: NexusGenRootTypes['FAQ'] | null; // FAQ
     editSociety: NexusGenRootTypes['Society'] | null; // Society
     editUnion: NexusGenRootTypes['Union'] | null; // Union
+    generatePublicUserToken: NexusGenRootTypes['AuthenticatedUserResponse'] | null; // AuthenticatedUserResponse
     leaveGroup: NexusGenRootTypes['Group'] | null; // Group
     leaveSociety: NexusGenRootTypes['Society'] | null; // Society
     likeEvent: NexusGenRootTypes['Event'] | null; // Event
@@ -187,6 +202,22 @@ export interface NexusGenFieldTypes {
     setUserCurrentGroup: NexusGenRootTypes['State'] | null; // State
     updateUserName: NexusGenRootTypes['User'] | null; // User
   }
+  PublicEvent: { // field return type
+    bannerUrl: string | null; // String
+    createdAt: string | null; // String
+    date: string | null; // String
+    description: string | null; // String
+    eventImageUrls: Array<string | null> | null; // [String]
+    id: string | null; // ID
+    likes: number | null; // Int
+    location: NexusGenRootTypes['Location'] | null; // Location
+    name: string | null; // String
+    registerLink: string | null; // String
+    society: NexusGenRootTypes['Society'] | null; // Society
+    tags: Array<NexusGenEnums['EventType'] | null> | null; // [EventType]
+    thumbnailUrl: string | null; // String
+    updatedAt: string | null; // String
+  }
   Query: { // field return type
     Event: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     FindEventById: NexusGenRootTypes['Event'] | null; // Event
@@ -194,11 +225,15 @@ export interface NexusGenFieldTypes {
     FindEventByUnionId: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     FindGroupById: NexusGenRootTypes['Group'] | null; // Group
     FindPastEvents: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
+    FindPastPublicEvents: Array<NexusGenRootTypes['PublicEvent'] | null> | null; // [PublicEvent]
     FindSimilarEvents: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
+    FindSimilarPublicEvents: Array<NexusGenRootTypes['PublicEvent'] | null> | null; // [PublicEvent]
     FindSocietyById: NexusGenRootTypes['Society'] | null; // Society
     FindUnverifiedEvents: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
+    FindUnverifiedPublicEvents: Array<NexusGenRootTypes['PublicEvent'] | null> | null; // [PublicEvent]
     FindUserByEmail: NexusGenRootTypes['User'] | null; // User
     FindUserById: NexusGenRootTypes['User'] | null; // User
+    PublicEvent: Array<NexusGenRootTypes['PublicEvent'] | null> | null; // [PublicEvent]
     Society: Array<NexusGenRootTypes['Society'] | null> | null; // [Society]
     Uni: Array<NexusGenRootTypes['Uni'] | null> | null; // [Uni]
     Union: Array<NexusGenRootTypes['Union'] | null> | null; // [Union]
@@ -330,6 +365,7 @@ export interface NexusGenFieldTypeNames {
     editFAQ: 'FAQ'
     editSociety: 'Society'
     editUnion: 'Union'
+    generatePublicUserToken: 'AuthenticatedUserResponse'
     leaveGroup: 'Group'
     leaveSociety: 'Society'
     likeEvent: 'Event'
@@ -344,6 +380,22 @@ export interface NexusGenFieldTypeNames {
     setUserCurrentGroup: 'State'
     updateUserName: 'User'
   }
+  PublicEvent: { // field return type name
+    bannerUrl: 'String'
+    createdAt: 'String'
+    date: 'String'
+    description: 'String'
+    eventImageUrls: 'String'
+    id: 'ID'
+    likes: 'Int'
+    location: 'Location'
+    name: 'String'
+    registerLink: 'String'
+    society: 'Society'
+    tags: 'EventType'
+    thumbnailUrl: 'String'
+    updatedAt: 'String'
+  }
   Query: { // field return type name
     Event: 'Event'
     FindEventById: 'Event'
@@ -351,11 +403,15 @@ export interface NexusGenFieldTypeNames {
     FindEventByUnionId: 'Event'
     FindGroupById: 'Group'
     FindPastEvents: 'Event'
+    FindPastPublicEvents: 'PublicEvent'
     FindSimilarEvents: 'Event'
+    FindSimilarPublicEvents: 'PublicEvent'
     FindSocietyById: 'Society'
     FindUnverifiedEvents: 'Event'
+    FindUnverifiedPublicEvents: 'PublicEvent'
     FindUserByEmail: 'User'
     FindUserById: 'User'
+    PublicEvent: 'PublicEvent'
     Society: 'Society'
     Uni: 'Uni'
     Union: 'Union'
@@ -516,6 +572,10 @@ export interface NexusGenArgTypes {
       name?: string | null; // String
       shortName?: string | null; // String
     }
+    generatePublicUserToken: { // args
+      email?: string | null; // String
+      token?: string | null; // String
+    }
     leaveGroup: { // args
       groupId: string; // String!
       userId: string; // String!
@@ -593,7 +653,16 @@ export interface NexusGenArgTypes {
       societyId?: string | null; // String
       unionId?: string | null; // String
     }
+    FindPastPublicEvents: { // args
+      name?: string | null; // String
+      societyName?: string | null; // String
+      tags?: Array<NexusGenEnums['EventType'] | null> | null; // [EventType]
+      unionName?: string | null; // String
+    }
     FindSimilarEvents: { // args
+      eventId: string; // String!
+    }
+    FindSimilarPublicEvents: { // args
       eventId: string; // String!
     }
     FindSocietyById: { // args
@@ -605,6 +674,12 @@ export interface NexusGenArgTypes {
     FindUserById: { // args
       id?: string | null; // String
     }
+    PublicEvent: { // args
+      name?: string | null; // String
+      societyName?: string | null; // String
+      tags?: Array<NexusGenEnums['EventType'] | null> | null; // [EventType]
+      unionName?: string | null; // String
+    }
     Society: { // args
       verified?: boolean | null; // Boolean
     }
@@ -613,7 +688,7 @@ export interface NexusGenArgTypes {
 
 export interface NexusGenAbstractTypeMembers {
   Group: "Society" | "Union"
-  Node: "Event" | "FAQ" | "Location" | "Society" | "State" | "Uni" | "Union" | "User"
+  Node: "Event" | "FAQ" | "Location" | "PublicEvent" | "Society" | "State" | "Uni" | "Union" | "User"
   Token: "AuthenticatedUserResponse"
 }
 
@@ -622,6 +697,7 @@ export interface NexusGenTypeInterfaces {
   Event: "Node"
   FAQ: "Node"
   Location: "Node"
+  PublicEvent: "Node"
   Society: "Node"
   State: "Node"
   Uni: "Node"
